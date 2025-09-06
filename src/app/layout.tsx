@@ -31,7 +31,9 @@ export default function RootLayout({
         <SidebarProvider>
           <AppSidebar />
 
-          <main className="bg-[#FAFAFC] w-full">{children}</main>
+          <main className="bg-[#FAFAFC] w-full relative flex-1">
+            {children}
+          </main>
         </SidebarProvider>
       </body>
     </html>

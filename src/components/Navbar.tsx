@@ -9,7 +9,7 @@ interface NavbarProps {
 
 export default function Navbar({ title }: NavbarProps) {
   return (
-    <nav className="font-sans">
+    <nav className="font-sans sticky top-0 w-full">
       <div className="flex justify-between items-center gap-4 h-20 border-b border-zinc-200 p-5 bg-white">
         <div className="flex items-center gap-4">
           <SidebarTrigger />
