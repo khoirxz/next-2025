@@ -5,10 +5,10 @@ import { ItemDetailResponseSchema } from "@/types/items";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-type Ctx = { params: { id: string } };
+type Ctx = { params: Promise<{ id: string }> };
 
 export async function GET(_req: Request, { params }: Ctx) {
-  const { id } = params;
+  const { id } = await params;
   if (!id) {
     return NextResponse.json({ message: "Missing id" }, { status: 400 });
   }
