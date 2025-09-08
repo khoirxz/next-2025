@@ -6,10 +6,10 @@ import { ItemUpdateBodySchema, ItemUpdateResponseSchema } from "@/types/items";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-type Ctx = { params: { id: string } };
+type Ctx = { params: Promise<{ id: string }> };
 
 export async function POST(req: Request, { params }: Ctx) {
-  const id = params.id;
+  const { id } = await params;
   if (!id) return NextResponse.json({ message: "Missing id" }, { status: 400 });
 
   const body = await req.json().catch(() => null);
