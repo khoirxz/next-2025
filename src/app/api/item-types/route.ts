@@ -3,7 +3,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { extFetch } from "@/server/bff";
-import { ItemTypeListSchema, ItemTypeSchema } from "@/types/itemTypes";
+import { ItemTypeListSchema } from "@/types/itemTypes";
 
 export async function GET(req: Request) {
   // Ambil query dari URL: q, page, limit

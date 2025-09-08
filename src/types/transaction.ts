@@ -9,14 +9,9 @@ import {
 
 // ---------- CREATE ----------
 export const InTxnCreateBodySchema = z.object({
-  code: z.string().optional().default(""),
-  transaction_date: z.string().optional().default(""),
   wash_type: WashType,
   infectious_type: InfectiousType,
-  total_weight: z.number().nonnegative(),
-  total_weight_scales: z.number().nonnegative(),
-  total_qty: z.number().int().positive(),
-  corporate_id: z.string().optional().default(""),
+  total_qty: z.number().int().min(1),
   details: z.array(z.object({ item_id: z.string().min(1) })).min(1),
 });
 export type InTxnCreateBody = z.infer<typeof InTxnCreateBodySchema>;

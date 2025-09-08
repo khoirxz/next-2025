@@ -1,42 +1,64 @@
+"use client";
+
 import { EyeIcon, TrendingUpIcon, TrendingDownIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
+import { useItems } from "@/hooks/useItems";
+import { useTransactions } from "@/hooks/useTransactions";
+import { useItemTypes } from "@/hooks/useItemTypes";
+import { useRooms } from "@/hooks/useRooms";
+
 export default function Home() {
+  const { data: items } = useItems({ q: "", page: 1, limit: 20 });
+  const { data: transactions } = useTransactions({ q: "", page: 1, limit: 20 });
+  const { data: itemTypes } = useItemTypes({ q: "", page: 1, limit: 20 });
+  const { data: rooms } = useRooms({ q: "", page: 1, limit: 20 });
+
   return (
     <>
       <Navbar title="Dashboard" />
       <div className="font-sans flex flex-col min-h-screen p-5  max-w-6xl mx-auto">
-        <div className="grid grid-cols-3 gap-8">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex flex-col bg-white p-5 border border-zinc-200 rounded-2xl w-full gap-3">
-              <div className="flex items-center gap-3">
-                <span className="bg-zinc-400/20 rounded-md p-1.5">
-                  <EyeIcon className="size-4" />
-                </span>
-                <p className="font-semibold">Page View</p>
-              </div>
-              <span className="flex gap-3">
-                <p className="text-3xl">
-                  {Math.floor(Math.random() * 1000000).toLocaleString()}
-                </p>{" "}
-                <div className="flex flex-col">
-                  {i % 2 === 0 ? (
-                    <span className="bg-red-400/20 text-red-700 ring-2 ring-red-700 py-0.5 px-2 rounded-md text-[10px] font-semibold flex items-center gap-1">
-                      {Math.floor(Math.random() * 100)}%
-                      <TrendingDownIcon className="size-3" />
-                    </span>
-                  ) : (
-                    <span className="bg-green-400/20 text-green-700 ring-2 ring-green-700 py-0.5 px-2 rounded-md text-[10px] font-semibold flex items-center gap-1">
-                      {Math.floor(Math.random() * 100)}%
-                      <TrendingUpIcon className="size-3" />
-                    </span>
-                  )}
-                </div>
-              </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex flex-col bg-white p-5 border border-zinc-200 rounded-2xl w-full gap-3 shadow">
+            <div className="flex items-center gap-3">
+              <p className="text-zinc-600 text-sm">Item Types</p>
             </div>
-          ))}
+            <span className="flex gap-3">
+              <p className="text-3xl font-semibold">
+                {itemTypes?.pageInfo.total_data}
+              </p>
+            </span>
+          </div>
+          <div className="flex flex-col bg-white p-5 border border-zinc-200 rounded-2xl w-full gap-3 shadow">
+            <div className="flex items-center gap-3">
+              <p className="text-zinc-600 text-sm">Rooms</p>
+            </div>
+            <span className="flex gap-3">
+              <p className="text-3xl font-semibold">
+                {rooms?.pageInfo.total_data}
+              </p>
+            </span>
+          </div>
+          <div className="flex flex-col bg-white p-5 border border-zinc-200 rounded-2xl w-full gap-3 shadow">
+            <div className="flex items-center gap-3">
+              <p className="text-zinc-600 text-sm">Items</p>
+            </div>
+            <span className="flex gap-3">
+              <p className="text-3xl font-semibold">
+                {items?.pageInfo.total_data}
+              </p>
+            </span>
+          </div>
+          <div className="flex flex-col bg-white p-5 border border-zinc-200 rounded-2xl w-full gap-3 shadow">
+            <div className="flex items-center gap-3">
+              <p className="text-zinc-600 text-sm">Transactions</p>
+            </div>
+            <span className="flex gap-3">
+              <p className="text-3xl font-semibold">
+                {transactions?.pageInfo.total_data}
+              </p>
+            </span>
+          </div>
         </div>
       </div>
     </>

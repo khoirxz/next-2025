@@ -1,15 +1,8 @@
+"use client";
 import Link from "next/link";
-
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Pagination,
   PaginationContent,
@@ -31,8 +24,39 @@ import {
 import { SearchIcon, PlusIcon } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
+import AppTable from "@/components/app-table";
+
+import { useTransactions } from "@/hooks/useTransactions";
+import { InTxnRow } from "@/types/transaction";
 
 export default function ItemType() {
+  const sp = useSearchParams();
+  const router = useRouter();
+  const q = sp.get("q") || "";
+  const page = Number(sp.get("page") || "1");
+  const limit = 10;
+
+  const { data, isLoading, isFetching, error } = useTransactions({
+    q,
+    page,
+    limit,
+  });
+
+  const setParams = (key: string, value: string) => {
+    const usp = new URLSearchParams(sp);
+    if (value) usp.set(key, value);
+    else usp.delete(key);
+    router.replace(`/transactions?${usp.toString()}`);
+  };
+
+  if (error) return <div>{error.message}</div>;
+
+  const items = data?.data ?? [];
+  const { page: cur, total_page } = data?.pageInfo ?? {
+    page: 1,
+    total_page: 1,
+  };
+
   return (
     <>
       <Navbar title="Transactions" />
@@ -40,7 +64,7 @@ export default function ItemType() {
       <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5 space-y-6">
         <div className="flex justify-end">
           <Button asChild>
-            <Link href="/items/new">
+            <Link href="/transactions/new">
               <PlusIcon className="size-4" />
               Create
             </Link>
@@ -52,6 +76,8 @@ export default function ItemType() {
             <div className="flex gap-2 items-center">
               <SearchIcon className="size-4" />
               <input
+                onChange={(e) => setParams("q", e.target.value)}
+                defaultValue={q}
                 type="text"
                 placeholder="Search by name"
                 className="outline-none text-sm"
@@ -60,34 +86,33 @@ export default function ItemType() {
           </div>
 
           <div className="max-h-[420px] overflow-y-auto">
-            <Table className="border-y border-zinc-200">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="pl-5 bg-zinc-600/10 border border-l-0 border-zinc-300">
-                    Invoice
-                  </TableHead>
-                  <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                    Status
-                  </TableHead>
-                  <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                    Method
-                  </TableHead>
-                  <TableHead className="pr-5 text-right bg-zinc-600/10 border border-r-0 border-zinc-300">
-                    Amount
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="pl-5 font-medium">INV001</TableCell>
-                    <TableCell>Paid</TableCell>
-                    <TableCell>Credit Card</TableCell>
-                    <TableCell className="text-right pr-5">$250.00</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            {isLoading && isFetching ? (
+              <div className="p-5 text-center">Loading...</div>
+            ) : (
+              <AppTable<InTxnRow>
+                data={items}
+                columns={[
+                  {
+                    key: "code",
+                    label: "Code",
+                  },
+                  {
+                    key: "status",
+                    label: "Status",
+                  },
+                  {
+                    key: "transaction_date",
+                    label: "Date",
+                    render: (row) =>
+                      new Date(row.transaction_date).toDateString(),
+                  },
+                  {
+                    key: "wash_type",
+                    label: "Wash Type",
+                  },
+                ]}
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-between mt-5 p-5 ">

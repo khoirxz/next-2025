@@ -13,8 +13,8 @@ export const ItemStatus = z.enum([
   "DEFECT",
 ]);
 
-export const InfectiousType = z.enum(["INFECTION", "NON_INFECTION"]);
-export const WashType = z.enum(["NORMAL", "SPECIAL"]);
+export const InfectiousType = z.enum(["INFECTIOUS", "NON_INFECTIOUS"]);
+export const WashType = z.enum(["NORMAL"]);
 
 export const DeletedAny = z.union([z.enum(["NO", "YES"]), z.boolean()]);
 
