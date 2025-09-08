@@ -66,9 +66,9 @@ export async function POST(req: Request) {
       maxAge,
     });
     return res;
-  } catch (e: any) {
+  } catch (e: unknown) {
     return NextResponse.json(
-      { message: e?.errors ?? "Internal error", code: e?.code ?? 500 },
+      { message: "Internal error", code: 500 },
       { status: 500 }
     );
   }
