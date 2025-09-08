@@ -71,7 +71,7 @@ export const ItemRowSchema = z.object({
   item_types: ItemEmbeddedTypeSchema,
   rooms: ItemEmbeddedRoomSchema,
   corporates: ItemEmbeddedCorporateSchema,
-  vendors: z.any().nullable(), // belum ada detail struktur
+  vendors: z.string().nullable(), // belum ada detail struktur
 });
 
 export const ItemListSchema = ResponseEnvelopeWithPage(z.array(ItemRowSchema));

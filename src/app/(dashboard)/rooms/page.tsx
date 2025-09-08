@@ -1,4 +1,5 @@
 "use client";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import {
   Table,
@@ -30,7 +31,36 @@ import { SearchIcon } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
 
-export default function ItemType() {
+import { useRooms } from "@/hooks/useRooms";
+
+export default function Rooms() {
+  const sp = useSearchParams();
+  const router = useRouter();
+  const q = sp.get("q") || "";
+  const page = Number(sp.get("page") || "1");
+  const limit = 10;
+
+  const { data, isLoading, isFetching, error } = useRooms({
+    q,
+    page,
+    limit,
+  });
+
+  const setParams = (key: string, value: string) => {
+    const usp = new URLSearchParams(sp);
+    if (value) usp.set(key, value);
+    else usp.delete(key);
+    router.replace(`/rooms?${usp.toString()}`);
+  };
+
+  if (error) return <div>{error.message}</div>;
+
+  const items = data?.data ?? [];
+  const { page: cur, total_page } = data?.pageInfo ?? {
+    page: 1,
+    total_page: 1,
+  };
+
   return (
     <>
       <Navbar title="Rooms" />
@@ -40,6 +70,8 @@ export default function ItemType() {
             <div className="flex gap-2 items-center">
               <SearchIcon className="size-4" />
               <input
+                defaultValue={q}
+                onChange={(e) => setParams("q", e.target.value)}
                 type="text"
                 placeholder="Search by name"
                 className="outline-none text-sm"
@@ -48,34 +80,38 @@ export default function ItemType() {
           </div>
 
           <div className="max-h-[420px] overflow-y-auto">
-            <Table className="border-y border-zinc-200">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="pl-5 bg-zinc-600/10 border border-l-0 border-zinc-300">
-                    Invoice
-                  </TableHead>
-                  <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                    Status
-                  </TableHead>
-                  <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                    Method
-                  </TableHead>
-                  <TableHead className="pr-5 text-right bg-zinc-600/10 border border-r-0 border-zinc-300">
-                    Amount
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="pl-5 font-medium">INV001</TableCell>
-                    <TableCell>Paid</TableCell>
-                    <TableCell>Credit Card</TableCell>
-                    <TableCell className="text-right pr-5">$250.00</TableCell>
+            {isLoading && isFetching ? (
+              <div className="p-5 text-center">Loading...</div>
+            ) : (
+              <Table className="border-y border-zinc-200">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="pl-5 bg-zinc-600/10 border border-l-0 border-zinc-300">
+                      Invoice
+                    </TableHead>
+                    <TableHead className="bg-zinc-600/10 border border-zinc-300">
+                      Status
+                    </TableHead>
+                    <TableHead className="bg-zinc-600/10 border border-zinc-300">
+                      Method
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {items.map((item) => (
+                    <TableRow key={item.room_id}>
+                      <TableCell className="pl-5 font-medium">
+                        {item.name}
+                      </TableCell>
+                      <TableCell>{item.status}</TableCell>
+                      <TableCell>
+                        {item.corporates.name} - {item.corporates.code}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
 
           <div className="flex items-center justify-between mt-5 p-5 ">

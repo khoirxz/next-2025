@@ -1,6 +1,5 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
 
 import {
   Table,
@@ -102,7 +101,7 @@ export default function ItemType() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data?.data.map((item, i) => (
+                  {items.map((item, i) => (
                     <TableRow key={i}>
                       <TableCell className="pl-5 font-medium">
                         {item.name}

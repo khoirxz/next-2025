@@ -26,7 +26,7 @@ export const PageInfoSchema = z.object({
 });
 
 export const ResponseEnvelope = <T extends z.ZodTypeAny>(dataSchema: T) => {
-  z.object({
+  return z.object({
     code: z.number(),
     message: z.string(),
     requestId: z.string(),

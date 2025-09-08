@@ -2,7 +2,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/client";
 import { qk } from "@/lib/queryKeys";
-import { ItemDetailResponse } from "@/types/items";
+import {
+  ItemDetailResponse,
+  ItemListResponse,
+  ItemUpdateBody,
+} from "@/types/items";
 
 export function useItemTypes(params: {
   q?: string;
@@ -37,7 +41,7 @@ export function useItems(params: {
   page?: number;
   limit?: number;
 }) {
-  return useQuery({
+  return useQuery<ItemListResponse>({
     queryKey: qk.items(params),
     queryFn: () => {
       const usp = new URLSearchParams();
@@ -50,7 +54,7 @@ export function useItems(params: {
 }
 
 export function useItemDetail(id: string) {
-  return useQuery({
+  return useQuery<ItemDetailResponse>({
     queryKey: qk.item(id),
     queryFn: () => api(`/api/items/${id}`),
     staleTime: 60_000,
@@ -61,27 +65,25 @@ export function useItemDetail(id: string) {
 export function useUpdateItem(id: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload: {
-      item_type_id: string;
-      room_id: string;
-      corporate_id?: string;
-    }) =>
+    mutationFn: (payload: ItemUpdateBody) =>
       api(`/api/items/${id}/update`, {
         method: "POST",
         body: JSON.stringify(payload),
       }),
     onMutate: async (vars) => {
       await qc.cancelQueries({ queryKey: qk.item(id) });
-      const prev = qc.getQueryData<ItemDetailResponse>(qk.item(id));
-      qc.setQueryData<ItemDetailResponse>(
+      const prev = qc.getQueryData<any>(qk.item(id));
+      qc.setQueryData<ItemDetailResponse | undefined>(
         qk.item(id),
-        (old: ItemDetailResponse) =>
+        (old: ItemDetailResponse | undefined) =>
           old
             ? {
                 ...old,
-                item_type_id: vars.item_type_id,
-                room_id: vars.room_id,
-                corporate_id: vars.corporate_id,
+                data: {
+                  ...old.data,
+                  ...vars,
+                  corporate_id: vars.corporate_id ?? old.data.corporate_id,
+                },
               }
             : old
       );
