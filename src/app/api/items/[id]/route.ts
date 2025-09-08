@@ -8,8 +8,10 @@ export const runtime = "nodejs";
 type Ctx = { params: { id: string } };
 
 export async function GET(_req: Request, { params }: Ctx) {
-  const { id } = await params;
-  if (!id) return NextResponse.json({ message: "Missing id" }, { status: 400 });
+  const { id } = params;
+  if (!id) {
+    return NextResponse.json({ message: "Missing id" }, { status: 400 });
+  }
 
   const upstream = await extFetch(`items/${encodeURIComponent(id)}`, {
     withAuth: true,
