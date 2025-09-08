@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -31,7 +33,7 @@ import Navbar from "@/components/Navbar";
 export default function ItemType() {
   return (
     <>
-      <Navbar title="Transactions" />
+      <Navbar title="Rooms" />
       <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5">
         <div className="bg-white border border-zinc-200 rounded-xl shadow">
           <div className="p-5">

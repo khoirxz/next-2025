@@ -1,3 +1,7 @@
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+
 import {
   Table,
   TableBody,
@@ -27,13 +31,12 @@ import {
 import { SearchIcon, PlusIcon } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function ItemType() {
   return (
     <>
-      <Navbar title="List Items" />
+      <Navbar title="Transactions" />
+
       <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5 space-y-6">
         <div className="flex justify-end">
           <Button asChild>
@@ -51,7 +54,7 @@ export default function ItemType() {
               <input
                 type="text"
                 placeholder="Search by name"
-                className="outline-none text-sm w-full"
+                className="outline-none text-sm"
               />
             </div>
           </div>
@@ -87,7 +90,7 @@ export default function ItemType() {
             </Table>
           </div>
 
-          <div className="flex items-center justify-between p-5 ">
+          <div className="flex items-center justify-between mt-5 p-5 ">
             <p className="text-sm text-zinc-500">
               Showing <span className="font-semibold">1-10</span> of{" "}
               <span className="font-semibold">100</span> results
@@ -112,7 +115,7 @@ export default function ItemType() {
               </Pagination>
             </div>
 
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2">
               <label htmlFor="rows">Rows per page</label>
               <Select>
                 <SelectTrigger className="w-[80px]" id="rows">

@@ -1,7 +1,9 @@
 "use client";
-import Link from "next/link";
+// react
 import { useState } from "react";
+import Link from "next/link";
 
+// components library
 import {
   Select,
   SelectContent,
@@ -16,14 +18,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChevronLeftIcon, Trash, ChevronDownIcon } from "lucide-react";
-
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+// components custom
+import Navbar from "@/components/Navbar";
+
+// icons, images
+import { ChevronLeftIcon, Trash, ChevronDownIcon } from "lucide-react";
 
 export default function Page() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
 
   return (

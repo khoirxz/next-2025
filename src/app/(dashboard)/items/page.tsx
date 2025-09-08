@@ -1,3 +1,7 @@
+"use client";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+
 import {
   Table,
   TableBody,
@@ -24,15 +28,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchIcon } from "lucide-react";
-
 import Navbar from "@/components/Navbar";
+import { Button } from "@/components/ui/button";
 
-export default function ItemType() {
+import { SearchIcon, PlusIcon } from "lucide-react";
+
+export default function Items() {
   return (
     <>
-      <Navbar title="Item Types" />
-      <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5">
+      <Navbar title="List Items" />
+      <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5 space-y-6">
+        <div className="flex justify-end">
+          <Button asChild>
+            <Link href="/items/new">
+              <PlusIcon className="size-4" />
+              Create
+            </Link>
+          </Button>
+        </div>
+
         <div className="bg-white border border-zinc-200 rounded-xl shadow">
           <div className="p-5">
             <div className="flex gap-2 items-center">
@@ -76,7 +90,7 @@ export default function ItemType() {
             </Table>
           </div>
 
-          <div className="flex items-center justify-between mt-5 p-5 ">
+          <div className="flex items-center justify-between p-5 ">
             <p className="text-sm text-zinc-500">
               Showing <span className="font-semibold">1-10</span> of{" "}
               <span className="font-semibold">100</span> results

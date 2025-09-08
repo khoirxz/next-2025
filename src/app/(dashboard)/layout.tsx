@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Roboto } from "next/font/google";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import "./globals.css";
-import Providers from "./providers";
+import "../globals.css";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -26,11 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${roboto.variable} ${geistMono.variable} antialiased relative`}>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
+    <SidebarProvider>
+      <AppSidebar />
+
+      <main className="bg-[#FAFAFC] w-full relative flex-1">{children}</main>
+    </SidebarProvider>
   );
 }
