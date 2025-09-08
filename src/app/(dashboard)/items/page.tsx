@@ -4,14 +4,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -29,12 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import AppTable from "@/components/app-table";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 
 import { SearchIcon, PlusIcon } from "lucide-react";
 
 import { useItems } from "@/hooks/useItems";
+import { ItemRow } from "@/types/items";
 
 export default function Items() {
   const router = useRouter();
@@ -99,36 +93,49 @@ export default function Items() {
             {isLoading && isFetching ? (
               <div className="p-5 text-center">Loading...</div>
             ) : (
-              <Table className="border-y border-zinc-200">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="pl-5 bg-zinc-600/10 border border-l-0 border-zinc-300">
-                      Invoice
-                    </TableHead>
-                    <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                      Status
-                    </TableHead>
-                    <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                      Method
-                    </TableHead>
-                    <TableHead className="pr-5 text-right bg-zinc-600/10 border border-r-0 border-zinc-300">
-                      Amount
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {items.map((item) => (
-                    <TableRow key={item.item_id}>
-                      <TableCell className="pl-5 font-medium">
-                        {item.corporates.name} - {item.corporates.code}
-                      </TableCell>
-                      <TableCell>Paid</TableCell>
-                      <TableCell>Credit Card</TableCell>
-                      <TableCell className="text-right pr-5">$250.00</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <AppTable<ItemRow>
+                data={items}
+                columns={[
+                  {
+                    key: "corporates",
+                    label: "Name",
+                    render: (row) => <span>{row.item_types.name}</span>,
+                  },
+                  {
+                    key: "status",
+                    label: "Status",
+                  },
+                  {
+                    key: "last_status",
+                    label: "Last Status",
+                  },
+                  {
+                    key: "created_at",
+                    label: "Created At",
+                    render: (row) => (
+                      <span>{new Date(row.created_at).toDateString()}</span>
+                    ),
+                  },
+                  {
+                    key: "item_id",
+                    label: "Actions",
+                    render: (row) => (
+                      <div className="flex items-center gap-2">
+                        <Button variant="link" asChild>
+                          <Link href={`/items/${row.item_id}`}>
+                            <span>View</span>
+                          </Link>
+                        </Button>
+                        <Button variant="link" asChild>
+                          <Link href={`/items/${row.item_id}/edit`}>
+                            <span>Edit</span>
+                          </Link>
+                        </Button>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
             )}
           </div>
 

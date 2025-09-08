@@ -5,6 +5,7 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
     headers: { "Content-Type": "application/json", ...(init?.headers || {}) },
     cache: "no-store",
   });
+
   if (res.status === 401) {
     // sesi hilang → ke login
     if (typeof window !== "undefined") {
@@ -13,6 +14,7 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
     }
     throw new Error("UNAUTHORIZED");
   }
+
   if (!res.ok) throw new Error((await res.text()) || `HTTP ${res.status}`);
   return res.json();
 }

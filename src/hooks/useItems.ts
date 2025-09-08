@@ -7,6 +7,8 @@ import {
   ItemListResponse,
   ItemUpdateBody,
 } from "@/types/items";
+import { RoomListResponse } from "@/types/rooms";
+import { ItemTypeListResponse } from "@/types/itemTypes";
 
 export function useItemTypes(params: {
   q?: string;
@@ -14,7 +16,7 @@ export function useItemTypes(params: {
   limit?: number;
 }) {
   const { q, page = 1, limit = 10 } = params;
-  return useQuery({
+  return useQuery<ItemTypeListResponse>({
     queryKey: qk.itemTypes(q, page, limit),
     queryFn: () =>
       api(`/api/item-types?q=${q ?? ""}&page=${page}&limit=${limit}`),
@@ -27,7 +29,7 @@ export function useRooms(params: {
   limit?: number;
 }) {
   const { q, page = 1, limit = 10 } = params;
-  return useQuery({
+  return useQuery<RoomListResponse>({
     queryKey: qk.rooms(q, page, limit),
     queryFn: () => api(`/api/rooms?q=${q ?? ""}&page=${page}&limit=${limit}`),
   });
@@ -58,6 +60,7 @@ export function useItemDetail(id: string) {
     queryKey: qk.item(id),
     queryFn: () => api(`/api/items/${id}`),
     staleTime: 60_000,
+    enabled: !!id,
   });
 }
 
@@ -65,27 +68,20 @@ export function useItemDetail(id: string) {
 export function useUpdateItem(id: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload: ItemUpdateBody) =>
+    mutationFn: (payload: {
+      item_type_id: string;
+      room_id: string;
+      corporate_id?: string;
+    }) =>
       api(`/api/items/${id}/update`, {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(payload),
       }),
     onMutate: async (vars) => {
       await qc.cancelQueries({ queryKey: qk.item(id) });
-      const prev = qc.getQueryData<any>(qk.item(id));
-      qc.setQueryData<ItemDetailResponse | undefined>(
-        qk.item(id),
-        (old: ItemDetailResponse | undefined) =>
-          old
-            ? {
-                ...old,
-                data: {
-                  ...old.data,
-                  ...vars,
-                  corporate_id: vars.corporate_id ?? old.data.corporate_id,
-                },
-              }
-            : old
+      const prev = qc.getQueryData<ItemDetailResponse>(qk.item(id));
+      qc.setQueryData<ItemDetailResponse>(qk.item(id), (old) =>
+        old ? { ...old, data: { ...old.data, ...vars } } : old
       );
       return { prev };
     },
@@ -94,7 +90,7 @@ export function useUpdateItem(id: string) {
     },
     onSettled: () => {
       qc.invalidateQueries({ queryKey: qk.item(id) });
-      qc.invalidateQueries({ queryKey: ["items"] }); // list refresh
+      qc.invalidateQueries({ queryKey: ["items"] });
     },
   });
 }

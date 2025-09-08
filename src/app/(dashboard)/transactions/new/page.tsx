@@ -42,7 +42,7 @@ export default function Page() {
         <div className="bg-white border border-zinc-200 rounded-xl shadow">
           <form className="grid grid-cols-3 gap-4 p-5">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Item Type</Label>
               <Select>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Theme" />
@@ -55,7 +55,7 @@ export default function Page() {
               </Select>
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Room</Label>
 
               <Select>
                 <SelectTrigger className="w-full">
@@ -70,7 +70,7 @@ export default function Page() {
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="date" className="px-1">
-                Date of birth
+                Procurement date
               </Label>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>

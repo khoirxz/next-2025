@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const upstream = await extFetch(`/items/batch-create`, {
+  const upstream = await extFetch(`items/batch-create`, {
     withAuth: true,
     method: "POST",
     body: JSON.stringify(parsed.data),
