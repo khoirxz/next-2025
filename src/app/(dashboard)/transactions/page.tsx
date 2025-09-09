@@ -117,32 +117,15 @@ export default function ItemType() {
 
           <div className="flex items-center justify-between mt-5 p-5 ">
             <p className="text-sm text-zinc-500">
-              Showing <span className="font-semibold">1-10</span> of{" "}
-              <span className="font-semibold">100</span> results
+              Showing <span className="font-medium">{cur}</span> out of{" "}
+              <span className="font-medium">{total_page}</span>
             </p>
-
-            <div>
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
 
             <div className="flex items-center gap-2">
               <label htmlFor="rows">Rows per page</label>
-              <Select>
+              <Select
+                defaultValue={String(limit)}
+                onValueChange={(value) => setParams("limit", value)}>
                 <SelectTrigger className="w-[80px]" id="rows">
                   <SelectValue placeholder="10" />
                 </SelectTrigger>

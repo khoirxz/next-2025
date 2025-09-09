@@ -22,6 +22,40 @@ export async function GET(req: Request) {
     withAuth: true,
   });
 
+  console.log(upstream.status);
+
+  // 🩹 Normalisasi: 404 "Tidak ditemukan" → 200 dengan data kosong
+  if (upstream.status === 404) {
+    let requestId: string | undefined;
+    let reason = "";
+    try {
+      const j = await upstream.clone().json();
+      requestId = j?.requestId;
+      reason = j?.errors || j?.message || "";
+    } catch {
+      /* ignore */
+    }
+    if (
+      /tidak ditemukan/i.test(reason) ||
+      /not found/i.test(reason) ||
+      /no data/i.test(reason)
+    ) {
+      const normalized = {
+        code: 0,
+        message: "Success",
+        requestId: requestId ?? crypto.randomUUID(),
+        data: [] as unknown[],
+        pageInfo: { page, total_data: 0, total_page: 0 },
+      };
+      const res = NextResponse.json(normalized, { status: 200 });
+      res.headers.set("x-upstream-status", "404");
+      return res;
+    }
+    // 404 jenis lain → tetap forward sebagai error
+    const text = await upstream.text().catch(() => "");
+    return new NextResponse(text || "HTTP 404", { status: 404 });
+  }
+
   // Kalau upstream error (401/403/404/500), forward apa adanya (client.ts akan handle 401)
   if (!upstream.ok) {
     const text = await upstream.text().catch(() => "");

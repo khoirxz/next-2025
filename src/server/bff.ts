@@ -30,12 +30,7 @@ export async function extFetch(path: string, opts: Opts = {}) {
     cache: "no-store",
   });
 
-  // forward error
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-
-    throw new Response(text || `HTTP ${res.status}`, { status: res.status });
-  }
+  // debugger
 
   return res;
 }

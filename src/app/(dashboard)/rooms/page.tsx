@@ -2,23 +2,6 @@
 import { useSearchParams, useRouter } from "next/navigation";
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Select,
   SelectContent,
   SelectGroup,
@@ -30,8 +13,10 @@ import {
 import { SearchIcon } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
+import AppTable from "@/components/app-table";
 
 import { useRooms } from "@/hooks/useRooms";
+import { Room } from "@/types/rooms";
 
 export default function Rooms() {
   const sp = useSearchParams();
@@ -74,7 +59,7 @@ export default function Rooms() {
                 onChange={(e) => setParams("q", e.target.value)}
                 type="text"
                 placeholder="Search by name"
-                className="outline-none text-sm"
+                className="outline-none text-sm w-full"
               />
             </div>
           </div>
@@ -83,65 +68,37 @@ export default function Rooms() {
             {isLoading && isFetching ? (
               <div className="p-5 text-center">Loading...</div>
             ) : (
-              <Table className="border-y border-zinc-200">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="pl-5 bg-zinc-600/10 border border-l-0 border-zinc-300">
-                      Invoice
-                    </TableHead>
-                    <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                      Status
-                    </TableHead>
-                    <TableHead className="bg-zinc-600/10 border border-zinc-300">
-                      Method
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {items.map((item) => (
-                    <TableRow key={item.room_id}>
-                      <TableCell className="pl-5 font-medium">
-                        {item.name}
-                      </TableCell>
-                      <TableCell>{item.status}</TableCell>
-                      <TableCell>
-                        {item.corporates.name} - {item.corporates.code}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <AppTable<Room>
+                data={items}
+                columns={[
+                  {
+                    key: "name",
+                    label: "Name",
+                  },
+                  {
+                    key: "code",
+                    label: "Code",
+                  },
+                  {
+                    key: "status",
+                    label: "Status",
+                  },
+                ]}
+              />
             )}
           </div>
 
           <div className="flex items-center justify-between mt-5 p-5 ">
             <p className="text-sm text-zinc-500">
-              Showing <span className="font-semibold">1-10</span> of{" "}
-              <span className="font-semibold">100</span> results
+              Showing <span className="font-medium">{cur}</span> out of{" "}
+              <span className="font-medium">{total_page}</span>
             </p>
-
-            <div>
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
 
             <div className="flex items-center gap-2">
               <label htmlFor="rows">Rows per page</label>
-              <Select>
+              <Select
+                onValueChange={(e) => setParams("limit", e)}
+                defaultValue={String(limit)}>
                 <SelectTrigger className="w-[80px]" id="rows">
                   <SelectValue placeholder="10" />
                 </SelectTrigger>
