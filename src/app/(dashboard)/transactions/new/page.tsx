@@ -108,7 +108,7 @@ export default function Page() {
           <div className="flex-1">
             <div className="bg-white border border-zinc-200 rounded-xl shadow">
               <form
-                className="grid grid-cols-2 gap-4 p-5"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5"
                 onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="name">Wash Type</Label>
