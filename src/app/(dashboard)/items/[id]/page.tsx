@@ -3,7 +3,15 @@
 import { useParams, useRouter } from "next/navigation";
 import type { ItemDetail } from "@/types/items";
 import { useMemo } from "react";
+import Link from "next/link";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { useItemDetail } from "@/hooks/useItems"; // hook yang sudah kita punya
 import Navbar from "@/components/Navbar";
 
@@ -90,6 +98,28 @@ export default function ItemsDetailPage() {
     <>
       <Navbar title="Detail Item" />
       <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5 space-y-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/items">Items</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={`/items/${it.item_id}`}>Item {it.item_id}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         <div className="flex items-center justify-end gap-3">
           <button
             onClick={() => router.push(`/items/${it.item_id}/edit`)}

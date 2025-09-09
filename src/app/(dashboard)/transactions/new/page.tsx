@@ -5,6 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -89,6 +96,28 @@ export default function Page() {
     <>
       <Navbar title="Create new Transaction" />
       <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5 space-y-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/transactions">Transactions</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/transactions/new">New Transaction</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         <div className="flex justify-end">
           <Button asChild>
             <Link href="/items">

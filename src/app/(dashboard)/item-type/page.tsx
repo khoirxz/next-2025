@@ -1,6 +1,14 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import {
   Select,
   SelectContent,
@@ -49,7 +57,23 @@ export default function ItemTypePage() {
   return (
     <>
       <Navbar title="Item Types" />
-      <div className="font-sans flex flex-col p-5 max-w-6xl mx-auto mt-5">
+      <div className="font-sans flex flex-col p-5 gap-5 max-w-6xl mx-auto mt-5">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/item-type">Item types</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         <div className="bg-white border border-zinc-200 rounded-xl shadow">
           <div className="p-5">
             <div className="flex gap-2 items-center">
