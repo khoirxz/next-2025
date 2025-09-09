@@ -4,6 +4,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { extFetch } from "@/server/bff";
 import { ItemTypeListSchema } from "@/types/itemTypes";
+import { respondUnauthorized } from "@/server/auth-respond";
 
 export async function GET(req: Request) {
   // Ambil query dari URL: q, page, limit
@@ -21,6 +22,8 @@ export async function GET(req: Request) {
   const upstream = await extFetch(`item-types?${qs.toString()}`, {
     withAuth: true,
   });
+
+  if (upstream.status === 401) return respondUnauthorized("NO_SESSION");
 
   // 🩹 Normalisasi: 404 "Tidak ditemukan" → 200 dengan data kosong
   if (upstream.status === 404) {

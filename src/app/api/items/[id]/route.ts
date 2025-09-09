@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { extFetch } from "@/server/bff";
+import { respondUnauthorized } from "@/server/auth-respond";
 import { ItemDetailResponseSchema } from "@/types/items";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +17,8 @@ export async function GET(_req: Request, { params }: Ctx) {
   const upstream = await extFetch(`items/${encodeURIComponent(id)}`, {
     withAuth: true,
   });
+
+  if (upstream.status === 401) return respondUnauthorized("NO_SESSION");
 
   if (!upstream.ok) {
     const text = await upstream.text().catch(() => "");

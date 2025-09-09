@@ -1,5 +1,4 @@
 "use client";
-import { useState, useMemo } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +14,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+
 import Navbar from "@/components/Navbar";
 
 import { ChevronLeftIcon, Trash, Plus } from "lucide-react";
@@ -72,8 +73,14 @@ export default function Page() {
         details: [{ item_id: "" }],
       });
 
-      alert("Item berhasil dibuat");
+      toast.success("Item berhasil dibuat");
+
+      // wait 2 seconds before redirecting to items page
+      setTimeout(() => {
+        window.location.href = "/transactions";
+      }, 2000);
     } catch (error) {
+      toast.error("Item gagal dibuat");
       console.log(error);
     }
   };
@@ -91,69 +98,81 @@ export default function Page() {
           </Button>
         </div>
 
-        <div className="bg-white border border-zinc-200 rounded-xl shadow">
-          <form
-            className="grid grid-cols-2 gap-4 p-5"
-            onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Wash Type</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Wash Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="NORMAL">NORMAL</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Infectious Type</Label>
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="md:max-w-sm w-full">
+            <h1 className="text-2xl font-semibold">Add New Item</h1>
+            <p className="text-sm text-muted-foreground">
+              Please fill in the form.
+            </p>
+          </div>
+          <div className="flex-1">
+            <div className="bg-white border border-zinc-200 rounded-xl shadow">
+              <form
+                className="grid grid-cols-2 gap-4 p-5"
+                onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name">Wash Type</Label>
+                  <Select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Wash Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="NORMAL">NORMAL</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name">Infectious Type</Label>
 
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Infectious Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="NON_INFECTIOUS">NON INFECTIOUS</SelectItem>
-                  <SelectItem value="INFECTIOUS">INFECTIOUS</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                  <Select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Infectious Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="NON_INFECTIOUS">
+                        NON INFECTIOUS
+                      </SelectItem>
+                      <SelectItem value="INFECTIOUS">INFECTIOUS</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            <div className="col-span-2">
-              <div className="flex flex-col gap-2">
-                <Label>Item ({fields.length})</Label>
-                {fields.map((field, idx) => (
-                  <div className="flex gap-2" key={field.id}>
-                    <Input
-                      type="text"
-                      placeholder={`Item ID #${idx + 1}`}
-                      {...register(`details.${idx}.item_id` as const)}
-                    />
-                    <Button
-                      type="button"
-                      variant={"destructive"}
-                      size={"icon"}
-                      onClick={() => remove(idx)}
-                      disabled={fields.length === 1}>
-                      <Trash className="size-4" />
-                    </Button>
+                <div className="col-span-2">
+                  <div className="flex flex-col gap-2">
+                    <Label>Item ({fields.length})</Label>
+                    {fields.map((field, idx) => (
+                      <div className="flex gap-2" key={field.id}>
+                        <Input
+                          type="text"
+                          placeholder={`Item ID #${idx + 1}`}
+                          {...register(`details.${idx}.item_id` as const)}
+                        />
+                        <Button
+                          type="button"
+                          variant={"destructive"}
+                          size={"icon"}
+                          onClick={() => remove(idx)}
+                          disabled={fields.length === 1}>
+                          <Trash className="size-4" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <Button
-                className="mt-2 w-full"
-                variant="outline"
-                type="button"
-                onClick={addRow}>
-                <Plus className="size-4" />
-                Add
-              </Button>
+                  <Button
+                    className="mt-2 w-full"
+                    variant="outline"
+                    type="button"
+                    onClick={addRow}>
+                    <Plus className="size-4" />
+                    Add
+                  </Button>
+                </div>
+                <div className="col-span-3 flex justify-end">
+                  <Button type="submit">Submit</Button>
+                </div>
+              </form>
             </div>
-            <div className="col-span-3 flex justify-end">
-              <Button type="submit">Submit</Button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </>

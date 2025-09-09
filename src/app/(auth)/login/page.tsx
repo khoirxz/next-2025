@@ -1,9 +1,9 @@
 "use client";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -64,6 +64,7 @@ export default function Auth() {
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  className="font-sans text-sm"
                   required
                 />
               </div>
@@ -75,6 +76,7 @@ export default function Auth() {
                   {...register("password")}
                   id="password"
                   type="password"
+                  className="font-sans text-sm"
                   required
                 />
               </div>
@@ -82,16 +84,7 @@ export default function Auth() {
                 <Button type="submit" className="w-full">
                   Login
                 </Button>
-                <Button variant="outline" className="w-full">
-                  Login with Google
-                </Button>
               </div>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
             </div>
           </form>
         </CardContent>

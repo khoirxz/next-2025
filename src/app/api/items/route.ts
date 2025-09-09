@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { extFetch } from "@/server/bff";
+import { respondUnauthorized } from "@/server/auth-respond";
 import { ItemListQuerySchema, ItemListSchema } from "@/types/items";
 
 export async function GET(req: Request) {
@@ -32,6 +33,8 @@ export async function GET(req: Request) {
   const upstream = await extFetch(`items?${qs.toString()}`, {
     withAuth: true,
   });
+
+  if (upstream.status === 401) return respondUnauthorized("NO_SESSION");
 
   // 🩹 Normalisasi: 404 "Tidak ditemukan" → 200 dengan data kosong
   if (upstream.status === 404) {

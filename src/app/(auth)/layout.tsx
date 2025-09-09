@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 const COOKIE = process.env.AUTH_COOKIE_NAME ?? "__app_auth";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Login untuk melanjutkan",
+};
 
 export default async function AuthLayout({
   children,

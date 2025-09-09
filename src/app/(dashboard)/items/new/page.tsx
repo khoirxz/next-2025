@@ -5,6 +5,7 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { toast } from "sonner";
 
 // components library
 import {
@@ -114,8 +115,14 @@ export default function Page() {
         details: [{ item_id: "" }],
       });
 
-      alert("Item berhasil dibuat");
+      toast.success("Item berhasil dibuat");
+
+      // wait 2 seconds before redirecting to items page
+      setTimeout(() => {
+        window.location.href = "/items";
+      }, 2000);
     } catch (error) {
+      toast.error("Item gagal dibuat");
       console.log(error);
     }
   };
@@ -133,134 +140,145 @@ export default function Page() {
           </Button>
         </div>
 
-        <div className="bg-white border border-zinc-200 rounded-xl shadow">
-          <form
-            className="grid grid-cols-3 gap-4 p-5"
-            onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Item Type</Label>
-              <Controller
-                control={control}
-                name="item_type_id"
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder="Select item type"
-                        defaultValue={field.value}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {itemTypeResp?.data.map((itemType) => (
-                        <SelectItem
-                          key={itemType.item_type_id}
-                          value={itemType.item_type_id}
-                          className="capitalize">
-                          {itemType.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Room</Label>
-              <Controller
-                control={control}
-                name="room_id"
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder="Select room"
-                        defaultValue={field.value}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {roomResp?.data.map((room) => (
-                        <SelectItem
-                          key={room.room_id}
-                          value={room.room_id}
-                          className="capitalize">
-                          {room.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="date" className="px-1">
-                Procurement date
-              </Label>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    id="date"
-                    className="w-full justify-between font-normal">
-                    {watch("procurement_date")?.toLocaleDateString("id-ID")}
-                    <ChevronDownIcon />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="w-auto overflow-hidden p-0"
-                  align="start">
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="md:max-w-sm w-full">
+            <h1 className="text-2xl font-semibold">Add New Item</h1>
+            <p className="text-sm text-muted-foreground">
+              Please fill in the form.
+            </p>
+          </div>
+
+          <div className="flex-1">
+            <div className="bg-white border border-zinc-200 rounded-xl shadow">
+              <form
+                className="grid grid-cols-3 gap-4 p-5"
+                onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name">Item Type</Label>
                   <Controller
                     control={control}
-                    name="procurement_date"
+                    name="item_type_id"
                     render={({ field }) => (
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(date) => {
-                          setOpen(false);
-                          field.onChange(date);
-                        }}
-                      />
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue
+                            placeholder="Select item type"
+                            defaultValue={field.value}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {itemTypeResp?.data.map((itemType) => (
+                            <SelectItem
+                              key={itemType.item_type_id}
+                              value={itemType.item_type_id}
+                              className="capitalize">
+                              {itemType.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="col-span-3">
-              <div className="flex flex-col gap-2">
-                <Label>Item ({fields.length})</Label>
-                {fields.map((field, idx) => (
-                  <div className="flex gap-2" key={field.id}>
-                    <Input
-                      type="text"
-                      placeholder={`Item ID #${idx + 1}`}
-                      {...register(`details.${idx}.item_id` as const)}
-                    />
-                    <Button
-                      type="button"
-                      variant={"destructive"}
-                      size={"icon"}
-                      onClick={() => remove(idx)}
-                      disabled={fields.length === 1}>
-                      <Trash className="size-4" />
-                    </Button>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name">Room</Label>
+                  <Controller
+                    control={control}
+                    name="room_id"
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue
+                            placeholder="Select room"
+                            defaultValue={field.value}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {roomResp?.data.map((room) => (
+                            <SelectItem
+                              key={room.room_id}
+                              value={room.room_id}
+                              className="capitalize">
+                              {room.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="date" className="px-1">
+                    Procurement date
+                  </Label>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="date"
+                        className="w-full justify-between font-normal">
+                        {watch("procurement_date")?.toLocaleDateString("id-ID")}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start">
+                      <Controller
+                        control={control}
+                        name="procurement_date"
+                        render={({ field }) => (
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(date) => {
+                              setOpen(false);
+                              field.onChange(date);
+                            }}
+                          />
+                        )}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="col-span-3">
+                  <div className="flex flex-col gap-2">
+                    <Label>Item ({fields.length})</Label>
+                    {fields.map((field, idx) => (
+                      <div className="flex gap-2" key={field.id}>
+                        <Input
+                          type="text"
+                          placeholder={`Item ID #${idx + 1}`}
+                          {...register(`details.${idx}.item_id` as const)}
+                        />
+                        <Button
+                          type="button"
+                          variant={"destructive"}
+                          size={"icon"}
+                          onClick={() => remove(idx)}
+                          disabled={fields.length === 1}>
+                          <Trash className="size-4" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <Button
-                className="mt-2 w-full"
-                variant="outline"
-                type="button"
-                onClick={addRow}>
-                <Plus className="size-4" />
-                Add
-              </Button>
+                  <Button
+                    className="mt-2 w-full"
+                    variant="outline"
+                    type="button"
+                    onClick={addRow}>
+                    <Plus className="size-4" />
+                    Add
+                  </Button>
+                </div>
+                <div className="col-span-3 flex justify-end">
+                  <Button type="submit" disabled={isPending}>
+                    {isPending ? "Saving..." : "Save"}
+                  </Button>
+                </div>
+              </form>
             </div>
-            <div className="col-span-3 flex justify-end">
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Saving..." : "Save"}
-              </Button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </>

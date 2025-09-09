@@ -72,7 +72,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent className="bg-white">
         <SidebarHeader className="h-20 border-b border-zinc-200 flex flex-col justify-center p-5 font-sans">
-          <h1 className="text-lg md:text-xl font-bold">Inventory</h1>
+          <h1 className="text-lg md:text-xl font-bold">My App</h1>
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>

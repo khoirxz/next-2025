@@ -34,6 +34,7 @@ import {
   useUpdateItem,
 } from "@/hooks/useItems";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   item_type_id: z.string().min(1),
@@ -58,7 +59,6 @@ export default function Page() {
 
   const {
     control,
-    register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting, isDirty },
@@ -92,7 +92,13 @@ export default function Page() {
       room_id: data.room_id,
       corporate_id: "",
     });
-    router.replace("/items");
+
+    toast.success("Item berhasil diupdate");
+
+    // wait 2 seconds before redirecting to items page
+    setTimeout(() => {
+      router.replace("/items");
+    }, 2000);
   };
 
   const itemTypes = itemTypeResp?.data ?? [];

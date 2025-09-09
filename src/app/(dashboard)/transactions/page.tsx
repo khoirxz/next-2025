@@ -80,7 +80,7 @@ export default function ItemType() {
                 defaultValue={q}
                 type="text"
                 placeholder="Search by name"
-                className="outline-none text-sm"
+                className="outline-none text-sm w-full"
               />
             </div>
           </div>
