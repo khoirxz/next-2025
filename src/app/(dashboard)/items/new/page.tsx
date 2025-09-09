@@ -153,7 +153,7 @@ export default function Page() {
               <form
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5"
                 onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 col-span-1">
                   <Label htmlFor="name">Item Type</Label>
                   <Controller
                     control={control}
@@ -180,7 +180,7 @@ export default function Page() {
                     )}
                   />
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 col-span-1">
                   <Label htmlFor="name">Room</Label>
                   <Controller
                     control={control}
@@ -207,7 +207,7 @@ export default function Page() {
                     )}
                   />
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 col-span-1">
                   <Label htmlFor="date" className="px-1">
                     Procurement date
                   </Label>
@@ -241,7 +241,7 @@ export default function Page() {
                     </PopoverContent>
                   </Popover>
                 </div>
-                <div className="col-span-3">
+                <div className="md:col-span-3">
                   <div className="flex flex-col gap-2">
                     <Label>Item ({fields.length})</Label>
                     {fields.map((field, idx) => (
@@ -271,7 +271,7 @@ export default function Page() {
                     Add
                   </Button>
                 </div>
-                <div className="col-span-3 flex justify-end">
+                <div className="md:col-span-3 flex justify-end">
                   <Button type="submit" disabled={isPending}>
                     {isPending ? "Saving..." : "Save"}
                   </Button>
