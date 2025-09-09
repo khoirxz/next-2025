@@ -81,7 +81,7 @@ export default function Auth() {
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={isPending}>
                   Login
                 </Button>
               </div>
